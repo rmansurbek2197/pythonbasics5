@@ -1,57 +1,58 @@
-def qoshish(a, b):
-    return a + b
+class Room:
+    def __init__(self, number, capacity, price):
+        self.number = number
+        self.capacity = capacity
+        self.price = price
+        self.is_booked = False
 
-def ayirish(a, b):
-    return a - b
+class Booking:
+    def __init__(self, customer, room, check_in, check_out):
+        self.customer = customer
+        self.room = room
+        self.check_in = check_in
+        self.check_out = check_out
 
-def kopaytirish(a, b):
-    return a * b
+class Customer:
+    def __init__(self, name, email, phone):
+        self.name = name
+        self.email = email
+        self.phone = phone
 
-def boish(a, b):
-    if b == 0:
-        raise ZeroDivisionError
-    return a / b
+class Hotel:
+    def __init__(self, name):
+        self.name = name
+        self.rooms = []
+        self.bookings = []
 
-def daraja(a, b):
-    return a ** b
+    def add_room(self, room):
+        self.rooms.append(room)
 
-def ildiz(a):
-    if a < 0:
-        raise ValueError
-    return a ** 0.5
+    def book_room(self, customer, room, check_in, check_out):
+        if not room.is_booked:
+            booking = Booking(customer, room, check_in, check_out)
+            self.bookings.append(booking)
+            room.is_booked = True
+            return True
+        return False
 
-print("Kalkulyator")
-print("1. Qo'shish")
-print("2. Ayirish")
-print("3. Ko'paytirish")
-print("4. Bo'lish")
-print("5. Daraja")
-print("6. Ildiz")
+    def cancel_booking(self, booking):
+        if booking in self.bookings:
+            self.bookings.remove(booking)
+            booking.room.is_booked = False
+            return True
+        return False
 
-amal = int(input("Amalni tanlang: "))
+hotel = Hotel("Grand Hotel")
+room1 = Room(1, 2, 100)
+room2 = Room(2, 3, 150)
+hotel.add_room(room1)
+hotel.add_room(room2)
 
-if amal == 1:
-    a = float(input("Birinchi sonni kiriting: "))
-    b = float(input("Ikkinchi sonni kiriting: "))
-    print(qoshish(a, b))
-elif amal == 2:
-    a = float(input("Birinchi sonni kiriting: "))
-    b = float(input("Ikkinchi sonni kiriting: "))
-    print(ayirish(a, b))
-elif amal == 3:
-    a = float(input("Birinchi sonni kiriting: "))
-    b = float(input("Ikkinchi sonni kiriting: "))
-    print(kopaytirish(a, b))
-elif amal == 4:
-    a = float(input("Birinchi sonni kiriting: "))
-    b = float(input("Ikkinchi sonni kiriting: "))
-    print(boish(a, b))
-elif amal == 5:
-    a = float(input("Sonni kiriting: "))
-    b = float(input("Darajani kiriting: "))
-    print(daraja(a, b))
-elif amal == 6:
-    a = float(input("Sonni kiriting: "))
-    print(ildiz(a))
-else:
-    print("Noto'g'ri amal")
+customer1 = Customer("John Doe", "john@example.com", "1234567890")
+customer2 = Customer("Jane Doe", "jane@example.com", "9876543210")
+
+hotel.book_room(customer1, room1, "2024-01-01", "2024-01-03")
+hotel.book_room(customer2, room2, "2024-01-05", "2024-01-08")
+
+for booking in hotel.bookings:
+    print(booking.customer.name, booking.room.number, booking.check_in, booking.check_out)
